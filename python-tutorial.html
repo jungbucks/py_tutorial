@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>파이썬 기초 — 고등학생을 위한 안내서</title>
+  <style>
+    :root {
+      --bg: #13111a;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --accent: #9d8df5;
+      --accent2: #5eead4;
+      --accent3: #f59e0b;
+      --text: #e2e8f0;
+      --text-muted: #9ba8bc;
+      --green: #4ade80;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --purple: #c084fc;
+      --orange: #fb923c;
+      --yellow: #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #12102a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(124,106,247,.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-badge {
+      display: inline-block;
+      background: rgba(124,106,247,.15);
+      border: 1px solid rgba(124,106,247,.4);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    header h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      background: linear-gradient(90deg, #a78bfa, #7c6af7, #5eead4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    header p {
+      color: var(--text-muted);
+      font-size: 17px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── 목차 ── */
+    nav.toc {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav.toc a {
+      display: inline-block;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 14px 12px;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    nav.toc a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── 메인 ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── 섹션 ── */
+    section {
+      margin-bottom: 72px;
+      scroll-margin-top: 56px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #f1f5f9;
+    }
+    section h3 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+      color: #cbd5e1;
+    }
+    section p {
+      color: #b0bdd0;
+      margin-bottom: 16px;
+    }
+    section ul {
+      color: #b0bdd0;
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    section ul li { margin-bottom: 6px; }
+
+    /* ── 코드 블록 ── */
+    .code-block {
+      background: #0d0e18;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      font-size: 14.5px;
+    }
+    .code-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dots span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .code-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'Courier New', monospace;
+      flex: 1;
+    }
+    .copy-btn {
+      background: rgba(124,106,247,.15);
+      border: 1px solid rgba(124,106,247,.3);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .copy-btn:hover { background: rgba(124,106,247,.3); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); background: rgba(74,222,128,.1); }
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      line-height: 1.7;
+    }
+    code { font-family: 'Courier New', 'D2Coding', monospace; }
+
+    /* ── 문법 강조 ── */
+    .kw  { color: #c084fc; font-weight: 600; }   /* keyword */
+    .fn  { color: #60a5fa; }                       /* function name */
+    .str { color: #4ade80; }                       /* string */
+    .num { color: #fb923c; }                       /* number */
+    .cmt { color: #6b7fa3; font-style: italic; }  /* comment */
+    .cls { color: #fbbf24; font-weight: 600; }    /* class name */
+    .slf { color: #f87171; }                       /* self */
+    .op  { color: #5eead4; }                       /* operator / punctuation */
+    .blt { color: #60a5fa; }                       /* builtin */
+    .deco { color: #f59e0b; }                      /* decorator */
+
+    /* ── 출력 박스 ── */
+    .output-box {
+      background: #080a10;
+      border: 1px solid #1e2235;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: -4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13.5px;
+      color: #94a3b8;
+      line-height: 1.9;
+    }
+    .output-box::before {
+      content: '▶  출력 결과';
+      display: block;
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: #4a5870;
+      margin-bottom: 10px;
+    }
+    .out-green { color: var(--green); }
+    .out-blue  { color: var(--blue); }
+    .out-yellow { color: var(--yellow); }
+
+    /* ── 정보 카드 ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .card-icon { font-size: 22px; margin-bottom: 8px; }
+    .card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #e2e8f0; }
+    .card p  { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+    /* ── 강조 배너 ── */
+    .tip {
+      background: rgba(94,234,212,.07);
+      border: 1px solid rgba(94,234,212,.25);
+      border-left: 4px solid var(--accent2);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #a0b8b4;
+    }
+    .tip strong { color: var(--accent2); }
+    .warn {
+      background: rgba(251,191,36,.07);
+      border: 1px solid rgba(251,191,36,.25);
+      border-left: 4px solid var(--yellow);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #b0a080;
+    }
+    .warn strong { color: var(--yellow); }
+
+    /* ── 클래스 다이어그램 ── */
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin: 24px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    .diagram-title {
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .class-box {
+      background: #12102a;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      overflow: hidden;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .class-name-row {
+      background: rgba(124,106,247,.2);
+      padding: 10px 16px;
+      font-weight: 700;
+      color: var(--yellow);
+      font-size: 15px;
+      text-align: center;
+      border-bottom: 1px solid var(--accent);
+    }
+    .class-section {
+      padding: 10px 16px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .class-section:last-child { border-bottom: none; }
+    .class-section-label {
+      font-family: sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .class-row { margin: 3px 0; }
+    .cls-var { color: var(--orange); }
+    .inst-var { color: var(--blue); }
+    .meth-row { color: var(--green); }
+
+    /* ── 인스턴스 비교 박스 ── */
+    .instance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .instance-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .instance-box h5 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 10px;
+      font-family: monospace;
+    }
+    .instance-box .attr { font-size: 13px; font-family: monospace; color: #7dd3fc; margin: 4px 0; }
+    .instance-box .attr .val { color: var(--green); }
+
+    /* ── 퀴즈 ── */
+    .quiz-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 28px 0;
+    }
+    .quiz-block h4 { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--accent3); }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-opt {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: monospace;
+      transition: border-color .15s, background .15s;
+      color: var(--text);
+    }
+    .quiz-opt:hover { border-color: var(--accent); background: rgba(124,106,247,.1); }
+    .quiz-opt.correct { border-color: var(--green); background: rgba(74,222,128,.1); color: var(--green); }
+    .quiz-opt.wrong   { border-color: var(--red);   background: rgba(248,113,113,.1); color: var(--red); }
+    .quiz-feedback { margin-top: 12px; font-size: 14px; min-height: 20px; }
+
+    /* ── 진행 표시 ── */
+    .progress-bar-wrap {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 4px;
+      transition: width .4s ease;
+    }
+
+    /* ── 푸터 ── */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 32px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 600px) {
+      .instance-grid { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">Python for Beginners</div>
+  <h1>파이썬 기초 완전 정복</h1>
+  <p>고등학생을 위한 단계별 파이썬 입문 — 출력부터 클래스까지</p>
+</header>
+
+<nav class="toc">
+  <a href="#s1">01 출력</a>
+  <a href="#s2">02 변수·자료형</a>
+  <a href="#s3">03 입력</a>
+  <a href="#s4">04 조건문</a>
+  <a href="#s5">05 반복문</a>
+  <a href="#s6">06 함수</a>
+  <a href="#s7">07 클래스</a>
+</nav>
+
+<div class="progress-bar-wrap">
+  <span>학습 진행</span>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <span id="progressText">0 / 7 완료</span>
+</div>
+
+<main>
+
+  <!-- ══════════════════════════════════════════
+       섹션 1 · 출력 print
+  ══════════════════════════════════════════ -->
+  <section id="s1">
+    <div class="section-label">Section 01</div>
+    <h2>🖨️ 화면에 출력하기 — <code>print()</code></h2>
+    <p>파이썬에서 무언가를 화면에 보여 주려면 <code>print()</code> 함수를 사용합니다. 가장 먼저 배우는, 그리고 가장 자주 쓰는 함수예요.</p>
+
+    <h3>기본 사용</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">hello.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="blt">print</span>(<span class="str">"안녕하세요, 파이썬!"</span>)
+<span class="blt">print</span>(<span class="str">'Hello, World!'</span>)
+<span class="blt">print</span>(<span class="num">42</span>)
+<span class="blt">print</span>(<span class="num">3.14</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      안녕하세요, 파이썬!<br>Hello, World!<br>42<br>3.14
+    </div>
+
+    <h3>여러 값 한 번에 출력</h3>
+    <p><code>print()</code>에 쉼표로 값을 나열하면 공백으로 구분해서 출력합니다. <code>sep</code>로 구분자를 바꿀 수도 있어요.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">print_options.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="blt">print</span>(<span class="str">"이름:"</span>, <span class="str">"홍길동"</span>)
+<span class="blt">print</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, sep<span class="op">=</span><span class="str">"-"</span>)
+<span class="blt">print</span>(<span class="str">"줄 안 바꿈"</span>, end<span class="op">=</span><span class="str">" "</span>)
+<span class="blt">print</span>(<span class="str">"이어쓰기"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      이름: 홍길동<br>1-2-3<br><span class="out-blue">줄 안 바꿈 이어쓰기</span>
+    </div>
+
+    <h3>f-문자열 (f-string)</h3>
+    <p>변수 값을 문자열 안에 바로 끼워 넣을 때 가장 편리한 방법입니다. 문자열 앞에 <code>f</code>를 붙이고 변수를 <code>{}</code> 안에 씁니다.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">fstring.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>name <span class="op">=</span> <span class="str">"지수"</span>
+age  <span class="op">=</span> <span class="num">17</span>
+<span class="blt">print</span>(<span class="str">f"안녕하세요! 저는 <span class="op">{</span>name<span class="op">}</span>이고 <span class="op">{</span>age<span class="op">}</span>살입니다."</span>)
+<span class="blt">print</span>(<span class="str">f"10 + 20 = <span class="op">{</span><span class="num">10</span> <span class="op">+</span> <span class="num">20</span><span class="op">}</span>"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      안녕하세요! 저는 지수이고 17살입니다.<br>10 + 20 = 30
+    </div>
+
+    <div class="quiz-block">
+      <h4>📝 확인 문제 — <code>print("A", "B", sep="+")</code>의 출력은?</h4>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">A B</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, true)">A+B</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">AB</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">"A"+"B"</div>
+      </div>
+      <div class="quiz-feedback" id="qfb0"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       섹션 2 · 변수와 자료형
+  ══════════════════════════════════════════ -->
+  <section id="s2">
+    <div class="section-label">Section 02</div>
+    <h2>📦 변수와 자료형</h2>
+    <p>변수는 데이터를 담아 두는 <strong>이름표가 붙은 상자</strong>와 같습니다. 파이썬은 자료형을 따로 선언하지 않아도 자동으로 인식합니다.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🔢</div>
+        <h4>int — 정수</h4>
+        <p>42, -7, 0 같은 소수점 없는 수</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌊</div>
+        <h4>float — 실수</h4>
+        <p>3.14, -0.5 같은 소수점 있는 수</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💬</div>
+        <h4>str — 문자열</h4>
+        <p>"안녕", 'Hello' 같은 글자 데이터</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <h4>bool — 논리값</h4>
+        <p>True 또는 False 두 가지만 존재</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">variables.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>score   <span class="op">=</span> <span class="num">95</span>          <span class="cmt"># int  — 정수</span>
+height  <span class="op">=</span> <span class="num">172.5</span>       <span class="cmt"># float — 실수</span>
+name    <span class="op">=</span> <span class="str">"박민준"</span>      <span class="cmt"># str  — 문자열</span>
+passed  <span class="op">=</span> <span class="kw">True</span>         <span class="cmt"># bool — 논리</span>
+
+<span class="blt">print</span>(<span class="blt">type</span>(score))    <span class="cmt"># &lt;class 'int'&gt;</span>
+<span class="blt">print</span>(<span class="blt">type</span>(height))   <span class="cmt"># &lt;class 'float'&gt;</span>
+<span class="blt">print</span>(<span class="blt">type</span>(name))     <span class="cmt"># &lt;class 'str'&gt;</span>
+
+<span class="cmt"># 산술 연산</span>
+<span class="blt">print</span>(score <span class="op">+</span> <span class="num">5</span>)      <span class="cmt"># 100</span>
+<span class="blt">print</span>(<span class="num">10</span> <span class="op">//</span> <span class="num">3</span>)        <span class="cmt"># 3  (정수 나눗셈)</span>
+<span class="blt">print</span>(<span class="num">10</span> <span class="op">%</span>  <span class="num">3</span>)        <span class="cmt"># 1  (나머지)</span>
+<span class="blt">print</span>(<span class="num">2</span>  <span class="op">**</span> <span class="num">8</span>)        <span class="cmt"># 256 (거듭제곱)</span></code></pre>
+    </div>
+
+    <div class="tip">
+      <strong>팁</strong> — <code>type(변수)</code>를 출력하면 해당 변수의 자료형을 확인할 수 있어요. 자료형을 모를 때 유용합니다.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       섹션 3 · 입력
+  ══════════════════════════════════════════ -->
+  <section id="s3">
+    <div class="section-label">Section 03</div>
+    <h2>⌨️ 사용자 입력 받기 — <code>input()</code></h2>
+    <p><code>input()</code>은 키보드로 값을 입력받는 함수입니다. 입력받은 값은 항상 <strong>문자열(str)</strong>로 저장되므로, 숫자로 사용하려면 변환이 필요합니다.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">input_example.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>name  <span class="op">=</span> <span class="blt">input</span>(<span class="str">"이름을 입력하세요: "</span>)
+age   <span class="op">=</span> <span class="blt">int</span>(<span class="blt">input</span>(<span class="str">"나이를 입력하세요: "</span>))   <span class="cmt"># 문자열 → 정수</span>
+gpa   <span class="op">=</span> <span class="blt">float</span>(<span class="blt">input</span>(<span class="str">"평점을 입력하세요: "</span>)) <span class="cmt"># 문자열 → 실수</span>
+
+<span class="blt">print</span>(<span class="str">f"안녕하세요, {name}님! 내년엔 {age <span class="op">+</span> <span class="num">1</span>}살이 되시는군요."</span>)</code></pre>
+    </div>
+
+    <div class="warn">
+      <strong>주의</strong> — <code>input()</code>의 반환값은 무조건 문자열입니다. <code>"3" + 5</code>처럼 문자열과 숫자를 더하면 오류가 납니다. 숫자가 필요하면 반드시 <code>int()</code> 또는 <code>float()</code>로 변환하세요.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       섹션 4 · 조건문
+  ══════════════════════════════════════════ -->
+  <section id="s4">
+    <div class="section-label">Section 04</div>
+    <h2>🔀 조건에 따라 다르게 — <code>if / elif / else</code></h2>
+    <p>프로그램이 상황에 따라 다른 동작을 하도록 만드는 것이 조건문입니다. 파이썬은 들여쓰기(indentation)로 코드 블록을 구분합니다.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">grade.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>score <span class="op">=</span> <span class="num">78</span>
+
+<span class="kw">if</span> score <span class="op">>=</span> <span class="num">90</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"A 등급 — 훌륭해요!"</span>)
+<span class="kw">elif</span> score <span class="op">>=</span> <span class="num">80</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"B 등급"</span>)
+<span class="kw">elif</span> score <span class="op">>=</span> <span class="num">70</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"C 등급"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"D 등급 — 더 노력해요"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      <span class="out-yellow">C 등급</span>
+    </div>
+
+    <h3>비교 연산자와 논리 연산자</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">operators.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># 비교 연산자: ==  !=  >  <  >=  <=</span>
+<span class="blt">print</span>(<span class="num">5</span> <span class="op">==</span> <span class="num">5</span>)   <span class="cmt"># True</span>
+<span class="blt">print</span>(<span class="num">5</span> <span class="op">!=</span> <span class="num">3</span>)   <span class="cmt"># True</span>
+
+<span class="cmt"># 논리 연산자: and  or  not</span>
+age   <span class="op">=</span> <span class="num">17</span>
+score <span class="op">=</span> <span class="num">85</span>
+
+<span class="kw">if</span> age <span class="op">>=</span> <span class="num">16</span> <span class="kw">and</span> score <span class="op">>=</span> <span class="num">80</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"장학금 신청 가능"</span>)
+
+<span class="kw">if</span> <span class="kw">not</span> (score <span class="op"><</span> <span class="num">60</span>)<span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"합격!"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      <span class="out-green">장학금 신청 가능<br>합격!</span>
+    </div>
+
+    <div class="quiz-block">
+      <h4>📝 확인 문제 — score = 75일 때 출력되는 것은?</h4>
+      <pre style="background:#0d0e18;border-radius:8px;padding:12px;font-size:13px;margin-bottom:14px"><code><span class="kw">if</span> score <span class="op">>=</span> <span class="num">90</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"A"</span>)
+<span class="kw">elif</span> score <span class="op">>=</span> <span class="num">80</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"B"</span>)
+<span class="kw">elif</span> score <span class="op">>=</span> <span class="num">70</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"C"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">"D"</span>)</code></pre>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">A</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">B</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, true)">C</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">D</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       섹션 5 · 반복문
+  ══════════════════════════════════════════ -->
+  <section id="s5">
+    <div class="section-label">Section 05</div>
+    <h2>🔁 반복문 — <code>for</code> / <code>while</code></h2>
+    <p>같은 작업을 여러 번 반복할 때 반복문을 씁니다. 파이썬에는 <code>for</code>와 <code>while</code> 두 종류가 있습니다.</p>
+
+    <h3>for 문 — 정해진 횟수 반복</h3>
+    <p><code>range()</code>와 함께 자주 쓰입니다. 리스트, 문자열 등 모든 순서 있는 자료를 순회할 수 있습니다.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">for_loop.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># range(5) → 0, 1, 2, 3, 4</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="blt">range</span>(<span class="num">5</span>)<span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">f"반복 {i + <span class="num">1</span>}번째"</span>)
+
+<span class="blt">print</span>(<span class="str">"---"</span>)
+
+<span class="cmt"># 리스트 순회</span>
+fruits <span class="op">=</span> [<span class="str">"사과"</span>, <span class="str">"바나나"</span>, <span class="str">"딸기"</span>]
+<span class="kw">for</span> fruit <span class="kw">in</span> fruits<span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">f"나는 {fruit}을(를) 좋아해요"</span>)
+
+<span class="blt">print</span>(<span class="str">"---"</span>)
+
+<span class="cmt"># 1~10의 합</span>
+total <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> n <span class="kw">in</span> <span class="blt">range</span>(<span class="num">1</span>, <span class="num">11</span>)<span class="op">:</span>
+    total <span class="op">+=</span> n
+<span class="blt">print</span>(<span class="str">f"1부터 10까지의 합: {total}"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      반복 1번째<br>반복 2번째<br>반복 3번째<br>반복 4번째<br>반복 5번째<br>---<br>나는 사과을(를) 좋아해요<br>나는 바나나을(를) 좋아해요<br>나는 딸기을(를) 좋아해요<br>---<br><span class="out-green">1부터 10까지의 합: 55</span>
+    </div>
+
+    <h3>while 문 — 조건이 참인 동안 반복</h3>
+    <p>반복 횟수를 미리 모를 때, 또는 특정 조건이 될 때까지 반복해야 할 때 씁니다.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">while_loop.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>count <span class="op">=</span> <span class="num">1</span>
+<span class="kw">while</span> count <span class="op"><=</span> <span class="num">5</span><span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">f"{count}번 반복"</span>)
+    count <span class="op">+=</span> <span class="num">1</span>
+
+<span class="blt">print</span>(<span class="str">"---"</span>)
+
+<span class="cmt"># break — 반복 강제 종료</span>
+n <span class="op">=</span> <span class="num">0</span>
+<span class="kw">while</span> <span class="kw">True</span><span class="op">:</span>
+    n <span class="op">+=</span> <span class="num">1</span>
+    <span class="kw">if</span> n <span class="op">==</span> <span class="num">3</span><span class="op">:</span>
+        <span class="kw">break</span>
+<span class="blt">print</span>(<span class="str">f"break로 탈출! n = {n}"</span>)
+
+<span class="cmt"># continue — 이번 반복만 건너뜀</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="blt">range</span>(<span class="num">1</span>, <span class="num">6</span>)<span class="op">:</span>
+    <span class="kw">if</span> i <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+        <span class="kw">continue</span>           <span class="cmt"># 짝수는 건너뜀</span>
+    <span class="blt">print</span>(i, end<span class="op">=</span><span class="str">" "</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      1번 반복<br>2번 반복<br>3번 반복<br>4번 반복<br>5번 반복<br>---<br>break로 탈출! n = 3<br><span class="out-blue">1 3 5</span>
+    </div>
+
+    <div class="tip">
+      <strong>for vs while 선택 기준</strong> — 반복 횟수가 정해져 있으면 <code>for</code>, 조건에 따라 종료 시점이 달라지면 <code>while</code>을 사용하세요.
+    </div>
+
+    <div class="quiz-block">
+      <h4>📝 확인 문제 — 아래 코드의 출력값은?</h4>
+      <pre style="background:#0d0e18;border-radius:8px;padding:12px;font-size:13px;margin-bottom:14px"><code>total <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="blt">range</span>(<span class="num">1</span>, <span class="num">4</span>)<span class="op">:</span>
+    total <span class="op">+=</span> i
+<span class="blt">print</span>(total)</code></pre>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">3</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">4</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, true)">6</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">10</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       섹션 6 · 함수
+  ══════════════════════════════════════════ -->
+  <section id="s6">
+    <div class="section-label">Section 06</div>
+    <h2>🧩 재사용 가능한 코드 — 함수 <code>def</code></h2>
+    <p>함수는 특정 작업을 수행하는 코드 묶음에 이름을 붙인 것입니다. 한 번 만들어 두면 여러 곳에서 호출해 재사용할 수 있어요.</p>
+
+    <h3>함수 정의와 호출</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">functions.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># 함수 정의</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name)<span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">f"안녕하세요, {name}님!"</span>)
+
+<span class="cmt"># 함수 호출</span>
+<span class="fn">greet</span>(<span class="str">"민수"</span>)
+<span class="fn">greet</span>(<span class="str">"지영"</span>)
+
+<span class="cmt"># 반환값이 있는 함수</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b)<span class="op">:</span>
+    <span class="kw">return</span> a <span class="op">+</span> b
+
+result <span class="op">=</span> <span class="fn">add</span>(<span class="num">3</span>, <span class="num">7</span>)
+<span class="blt">print</span>(<span class="str">f"3 + 7 = {result}"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      안녕하세요, 민수님!<br>안녕하세요, 지영님!<br>3 + 7 = 10
+    </div>
+
+    <h3>기본값 매개변수와 여러 반환값</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">advanced_func.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># 기본값 매개변수</span>
+<span class="kw">def</span> <span class="fn">introduce</span>(name, age<span class="op">=</span><span class="num">18</span>)<span class="op">:</span>
+    <span class="blt">print</span>(<span class="str">f"{name}님은 {age}살입니다."</span>)
+
+<span class="fn">introduce</span>(<span class="str">"철수"</span>)            <span class="cmt"># age 생략 → 기본값 18 사용</span>
+<span class="fn">introduce</span>(<span class="str">"영희"</span>, <span class="num">20</span>)       <span class="cmt"># age = 20</span>
+
+<span class="cmt"># 여러 값 반환</span>
+<span class="kw">def</span> <span class="fn">min_max</span>(numbers)<span class="op">:</span>
+    <span class="kw">return</span> <span class="blt">min</span>(numbers), <span class="blt">max</span>(numbers)
+
+lo, hi <span class="op">=</span> <span class="fn">min_max</span>([<span class="num">3</span>, <span class="num">1</span>, <span class="num">7</span>, <span class="num">2</span>, <span class="num">9</span>])
+<span class="blt">print</span>(<span class="str">f"최솟값: {lo}, 최댓값: {hi}"</span>)</code></pre>
+    </div>
+    <div class="output-box">
+      철수님은 18살입니다.<br>영희님은 20살입니다.<br><span class="out-blue">최솟값: 1, 최댓값: 9</span>
+    </div>
+
+    <div class="tip">
+      <strong>함수를 쓰는 이유</strong> — 같은 코드를 여러 번 복사·붙여넣기 하면 나중에 수정할 때 모든 곳을 바꿔야 합니다. 함수로 묶어 두면 한 곳만 바꿔도 돼요.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       섹션 7 · 클래스
+  ══════════════════════════════════════════ -->
+  <section id="s7">
+    <div class="section-label">Section 07</div>
+    <h2>🏗️ 설계도와 실체 — 클래스 <code>class</code></h2>
+    <p>클래스는 데이터(속성)와 기능(메서드)을 하나로 묶는 <strong>설계도</strong>입니다. 이 설계도로 찍어 낸 실제 객체를 <strong>인스턴스</strong>라고 합니다.</p>
+
+    <div class="tip">
+      <strong>비유로 이해하기</strong> — 클래스 = 스마트폰 <em>설계도</em>, 인스턴스 = 그 설계도로 만들어진 <em>실제 스마트폰</em>. 설계도는 하나지만, 스마트폰은 수백만 대를 찍어낼 수 있어요.
+    </div>
+
+    <h3>클래스 변수 vs 인스턴스 변수</h3>
+    <p>이 두 가지 변수의 차이를 이해하는 것이 클래스 학습의 핵심입니다.</p>
+
+    <div class="diagram">
+      <div class="diagram-title">CLASS DIAGRAM — Student</div>
+      <div class="class-box">
+        <div class="class-name-row">Student</div>
+        <div class="class-section">
+          <div class="class-section-label">클래스 변수 (모든 인스턴스가 공유)</div>
+          <div class="class-row"><span class="cls-var">school</span> = <span class="str">"파이썬 고등학교"</span></div>
+          <div class="class-row"><span class="cls-var">count</span> = <span class="num">0</span></div>
+        </div>
+        <div class="class-section">
+          <div class="class-section-label">인스턴스 변수 (각 인스턴스마다 독립)</div>
+          <div class="class-row"><span class="inst-var">self.name</span></div>
+          <div class="class-row"><span class="inst-var">self.grade</span></div>
+          <div class="class-row"><span class="inst-var">self.score</span></div>
+        </div>
+        <div class="class-section">
+          <div class="class-section-label">메서드</div>
+          <div class="class-row"><span class="meth-row">__init__(self, name, grade, score)</span></div>
+          <div class="class-row"><span class="meth-row">study(self, hours)</span></div>
+          <div class="class-row"><span class="meth-row">get_info(self)</span></div>
+          <div class="class-row"><span class="meth-row">get_count() — 클래스 메서드</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">student_class.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">class</span> <span class="cls">Student</span><span class="op">:</span>
+    <span class="cmt"># ── 클래스 변수: 모든 학생이 공유하는 정보 ──</span>
+    school <span class="op">=</span> <span class="str">"파이썬 고등학교"</span>
+    count  <span class="op">=</span> <span class="num">0</span>          <span class="cmt"># 학생 수 (전체 공유)</span>
+
+    <span class="cmt"># ── 생성자 메서드: 인스턴스가 만들어질 때 자동 실행 ──</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="slf">self</span>, name, grade, score)<span class="op">:</span>
+        <span class="cmt"># 인스턴스 변수: 각 학생마다 독립된 정보</span>
+        <span class="slf">self</span>.name  <span class="op">=</span> name
+        <span class="slf">self</span>.grade <span class="op">=</span> grade
+        <span class="slf">self</span>.score <span class="op">=</span> score
+        <span class="cls">Student</span>.count <span class="op">+=</span> <span class="num">1</span>  <span class="cmt"># 학생 생성 시 카운터 증가</span>
+
+    <span class="cmt"># ── 일반 메서드 ──</span>
+    <span class="kw">def</span> <span class="fn">study</span>(<span class="slf">self</span>, hours)<span class="op">:</span>
+        self<span class="op">.</span>score <span class="op">+=</span> hours <span class="op">*</span> <span class="num">2</span>
+        <span class="blt">print</span>(<span class="str">f"{<span class="slf">self</span>.name}이(가) {hours}시간 공부 → 점수 {<span class="slf">self</span>.score}점"</span>)
+
+    <span class="kw">def</span> <span class="fn">get_info</span>(<span class="slf">self</span>)<span class="op">:</span>
+        <span class="blt">print</span>(<span class="str">f"[{<span class="cls">Student</span>.school}] {<span class="slf">self</span>.grade}학년 {<span class="slf">self</span>.name} — 점수: {<span class="slf">self</span>.score}"</span>)
+
+    <span class="cmt"># ── 클래스 메서드: self 대신 cls 사용 ──</span>
+    <span class="deco">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">get_count</span>(cls)<span class="op">:</span>
+        <span class="blt">print</span>(<span class="str">f"현재 등록된 학생 수: {cls.count}명"</span>)</code></pre>
+    </div>
+
+    <h3>인스턴스 생성 및 사용</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">using_class.py (이어서)</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># 인스턴스 생성 → __init__ 자동 실행</span>
+s1 <span class="op">=</span> <span class="cls">Student</span>(<span class="str">"김민준"</span>, <span class="num">2</span>, <span class="num">70</span>)
+s2 <span class="op">=</span> <span class="cls">Student</span>(<span class="str">"이서연"</span>, <span class="num">3</span>, <span class="num">85</span>)
+
+<span class="cmt"># 각 인스턴스는 독립된 인스턴스 변수를 가짐</span>
+s1<span class="op">.</span><span class="fn">get_info</span>()
+s2<span class="op">.</span><span class="fn">get_info</span>()
+
+<span class="cmt"># 메서드 호출 → s1의 score만 바뀜</span>
+s1<span class="op">.</span><span class="fn">study</span>(<span class="num">3</span>)
+
+<span class="blt">print</span>(<span class="str">"---"</span>)
+
+<span class="cmt"># 클래스 변수는 모든 인스턴스에서 같은 값</span>
+<span class="blt">print</span>(s1<span class="op">.</span>school)   <span class="cmt"># "파이썬 고등학교"</span>
+<span class="blt">print</span>(s2<span class="op">.</span>school)   <span class="cmt"># "파이썬 고등학교" — 같음!</span>
+
+<span class="cmt"># 클래스 메서드는 클래스 이름으로도 호출 가능</span>
+<span class="cls">Student</span><span class="op">.</span><span class="fn">get_count</span>()</code></pre>
+    </div>
+    <div class="output-box">
+      [파이썬 고등학교] 2학년 김민준 — 점수: 70<br>[파이썬 고등학교] 3학년 이서연 — 점수: 85<br>김민준이(가) 3시간 공부 → 점수 76점<br>---<br>파이썬 고등학교<br>파이썬 고등학교<br><span class="out-green">현재 등록된 학생 수: 2명</span>
+    </div>
+
+    <h3>인스턴스 변수는 각자 따로 관리됩니다</h3>
+    <p>아래 그림처럼 <code>s1</code>과 <code>s2</code>는 같은 클래스의 인스턴스지만, 각자의 <code>name</code>, <code>score</code> 등은 완전히 독립적입니다.</p>
+
+    <div class="instance-grid">
+      <div class="instance-box">
+        <h5>s1 = Student("김민준", 2, 70)</h5>
+        <div class="attr">self.name  = <span class="val">"김민준"</span></div>
+        <div class="attr">self.grade = <span class="val">2</span></div>
+        <div class="attr">self.score = <span class="val">76</span> <small style="color:#475569">(공부 후)</small></div>
+        <div style="height:8px"></div>
+        <div class="attr" style="color:#7dd3fc50">school = <span style="color:#4ade8060">"파이썬 고등학교"</span> ← 공유</div>
+      </div>
+      <div class="instance-box">
+        <h5>s2 = Student("이서연", 3, 85)</h5>
+        <div class="attr">self.name  = <span class="val">"이서연"</span></div>
+        <div class="attr">self.grade = <span class="val">3</span></div>
+        <div class="attr">self.score = <span class="val">85</span> <small style="color:#475569">(변화 없음)</small></div>
+        <div style="height:8px"></div>
+        <div class="attr" style="color:#7dd3fc50">school = <span style="color:#4ade8060">"파이썬 고등학교"</span> ← 공유</div>
+      </div>
+    </div>
+
+    <h3>상속 — 기존 클래스를 확장하기</h3>
+    <p>기존 클래스(부모)를 물려받아 새로운 클래스(자식)를 만들 수 있습니다. 공통 기능은 부모에, 특수 기능은 자식에 넣으세요.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">inheritance.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">class</span> <span class="cls">Captain</span>(<span class="cls">Student</span>)<span class="op">:</span>          <span class="cmt"># Student 상속</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="slf">self</span>, name, grade, score, team)<span class="op">:</span>
+        <span class="blt">super</span>()<span class="op">.</span><span class="fn">__init__</span>(name, grade, score)  <span class="cmt"># 부모 생성자 호출</span>
+        <span class="slf">self</span>.team <span class="op">=</span> team                    <span class="cmt"># 추가 인스턴스 변수</span>
+
+    <span class="kw">def</span> <span class="fn">get_info</span>(<span class="slf">self</span>)<span class="op">:</span>                    <span class="cmt"># 메서드 오버라이딩</span>
+        <span class="blt">super</span>()<span class="op">.</span><span class="fn">get_info</span>()
+        <span class="blt">print</span>(<span class="str">f"  └ 소속 팀: {<span class="slf">self</span>.team} (팀장)"</span>)
+
+cap <span class="op">=</span> <span class="cls">Captain</span>(<span class="str">"박지훈"</span>, <span class="num">3</span>, <span class="num">90</span>, <span class="str">"알고리즘반"</span>)
+cap<span class="op">.</span><span class="fn">get_info</span>()
+<span class="cls">Student</span><span class="op">.</span><span class="fn">get_count</span>()</code></pre>
+    </div>
+    <div class="output-box">
+      [파이썬 고등학교] 3학년 박지훈 — 점수: 90<br>&nbsp;&nbsp;└ 소속 팀: 알고리즘반 (팀장)<br><span class="out-green">현재 등록된 학생 수: 3명</span>
+    </div>
+
+    <div class="quiz-block">
+      <h4>📝 확인 문제 — 클래스 변수와 인스턴스 변수의 차이는?</h4>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">클래스 변수는 메서드 안에서 선언한 변수다</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, true)">클래스 변수는 모든 인스턴스가 공유하고, 인스턴스 변수는 각각 독립적이다</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">인스턴스 변수는 클래스 이름으로만 접근할 수 있다</div>
+        <div class="quiz-opt" onclick="checkQuiz(this, false)">둘 다 같은 메모리를 사용한다</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  파이썬 기초 가이드 &nbsp;·&nbsp; 고등학생을 위한 프로그래밍 입문
+</footer>
+
+<script>
+  /* ── 퀴즈 ── */
+  function checkQuiz(el, isCorrect) {
+    const group = el.closest('.quiz-options');
+    const fb    = el.closest('.quiz-block').querySelector('.quiz-feedback');
+    if (group.querySelector('.correct') || group.querySelector('.wrong')) return;
+
+    group.querySelectorAll('.quiz-opt').forEach(opt => {
+      opt.style.pointerEvents = 'none';
+    });
+
+    if (isCorrect) {
+      el.classList.add('correct');
+      fb.innerHTML = '<span style="color:#4ade80">✓ 정답입니다! 잘 이해하고 있어요.</span>';
+      updateProgress();
+    } else {
+      el.classList.add('wrong');
+      fb.innerHTML = '<span style="color:#f87171">✗ 다시 생각해 보세요.</span>';
+      group.querySelectorAll('.quiz-opt').forEach(opt => {
+        opt.style.pointerEvents = '';
+      });
+      el.style.pointerEvents = 'none';
+    }
+  }
+
+  /* ── 진행률 ── */
+  let solved = new Set();
+  function updateProgress() {
+    const quizzes = document.querySelectorAll('.quiz-block');
+    quizzes.forEach((q, i) => {
+      if (q.querySelector('.correct')) solved.add(i);
+    });
+    const total = quizzes.length;
+    const done  = solved.size;
+    document.getElementById('progressFill').style.width = (done / total * 100) + '%';
+    document.getElementById('progressText').textContent = `${done} / ${total} 완료`;
+  }
+
+  /* ── 코드 복사 ── */
+  function copyCode(btn) {
+    const pre  = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '복사됨!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '복사';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+
+  /* ── 스크롤 → 네비 하이라이트 ── */
+  const navLinks = document.querySelectorAll('nav.toc a');
+  const sections = document.querySelectorAll('main section');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.style.color = '');
+        navLinks.forEach(a => a.style.borderColor = '');
+        const active = document.querySelector(`nav.toc a[href="#${e.target.id}"]`);
+        if (active) {
+          active.style.color = 'var(--accent)';
+          active.style.borderColor = 'var(--accent)';
+        }
+      }
+    });
+  }, { rootMargin: '-56px 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
